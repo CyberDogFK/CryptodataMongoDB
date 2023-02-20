@@ -6,6 +6,8 @@ import com.antonp.cryptodatamongodb.model.PricePair;
 import com.antonp.cryptodatamongodb.service.CsvWriter;
 import com.antonp.cryptodatamongodb.service.PricePairService;
 import com.antonp.cryptodatamongodb.service.mapper.ResponseDtoMapper;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -17,10 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.File;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @RestController
 @RequestMapping("/cryptocurrencies")
 @CrossOrigin
@@ -30,7 +28,9 @@ public class CryptocurrenciesController {
     private final CsvWriter csvWriter;
 
     public CryptocurrenciesController(PricePairService pricePairService,
-                                      ResponseDtoMapper<PricePairResponseDto, PricePair> responseDtoMapper, CsvWriter csvWriter) {
+                                      ResponseDtoMapper<PricePairResponseDto,
+                                              PricePair> responseDtoMapper,
+                                      CsvWriter csvWriter) {
         this.pricePairService = pricePairService;
         this.responseDtoMapper = responseDtoMapper;
         this.csvWriter = csvWriter;
@@ -60,7 +60,7 @@ public class CryptocurrenciesController {
 
     @GetMapping("/csv")
     public ResponseEntity<Resource> getCsvReport() {
-        Resource hello = csvWriter.writeToCsv(csvWriter.prepareCurrencyCsvReport());
+        Resource hello = csvWriter.writeToCsv(csvWriter.prepareCurrencyCsvReport(Currency.USD));
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION,
                         "attachment; filename=\"" + hello.getFilename() + "\"").body(hello);

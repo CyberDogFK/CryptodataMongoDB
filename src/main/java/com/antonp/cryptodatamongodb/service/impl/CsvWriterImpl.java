@@ -4,10 +4,6 @@ import com.antonp.cryptodatamongodb.model.Currency;
 import com.antonp.cryptodatamongodb.model.PricePair;
 import com.antonp.cryptodatamongodb.service.CsvWriter;
 import com.antonp.cryptodatamongodb.service.PricePairService;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.stereotype.Service;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,13 +12,16 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.stereotype.Service;
 
 @Service
 public class CsvWriterImpl implements CsvWriter {
-    private final static Path root = Paths.get("uploads");
-    private final static String OUTPUT_FILE_NAME = "output.csv";
-    private final static String REPORT_FIRST_LINE = "Cryptocurrency Name, Min Price, Max Price";
-    private final static String COMA_SEPARATOR = ",";
+    private static final Path ROOT = Paths.get("uploads");
+    private static final String OUTPUT_FILE_NAME = "output.csv";
+    private static final String REPORT_FIRST_LINE = "Cryptocurrency Name, Min Price, Max Price";
+    private static final String COMA_SEPARATOR = ",";
     private final PricePairService pricePairService;
 
     public CsvWriterImpl(PricePairService pricePairService) {
@@ -30,21 +29,20 @@ public class CsvWriterImpl implements CsvWriter {
     }
 
     @Override
-    public String prepareCurrencyCsvReport() {
+    public String prepareCurrencyCsvReport(Currency valuesIn) {
         List<String> currencyList = new ArrayList<>();
         currencyList.add(REPORT_FIRST_LINE);
         for (Currency currency : Currency.values()) {
-            if(currency.equals(Currency.USD)) {
-                continue;
+            if (!currency.equals(valuesIn)) {
+                currencyList.add(getCsvLineForCurrency(currency));
             }
-            currencyList.add(getCsvLineForCurrency(currency));
         }
         return separateLines(currencyList.toArray(new String[0]));
     }
 
     @Override
     public Resource writeToCsv(String string) throws RuntimeException {
-        File outputCsv = new File(root + "/" + OUTPUT_FILE_NAME);
+        File outputCsv = new File(ROOT + "/" + OUTPUT_FILE_NAME);
         if (!outputCsv.exists()) {
             try {
                 outputCsv.createNewFile();

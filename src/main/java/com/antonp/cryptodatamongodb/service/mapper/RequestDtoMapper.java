@@ -1,5 +1,5 @@
 package com.antonp.cryptodatamongodb.service.mapper;
 
-public interface RequestDtoMapper <D, T> {
+public interface RequestDtoMapper<D, T> {
     T mapToModel(D dto);
 }

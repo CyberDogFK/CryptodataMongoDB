@@ -1,15 +1,8 @@
 package com.antonp.cryptodatamongodb.model;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import org.springframework.data.annotation.Id;
-import org.springframework.web.bind.annotation.CrossOrigin;
-
 import java.math.BigDecimal;
+import lombok.Data;
+import org.springframework.data.annotation.Id;
 
 @Data
 public class PricePair {

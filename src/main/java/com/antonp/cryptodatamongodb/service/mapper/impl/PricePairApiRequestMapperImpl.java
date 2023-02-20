@@ -1,13 +1,13 @@
 package com.antonp.cryptodatamongodb.service.mapper.impl;
 
-import com.antonp.cryptodatamongodb.service.mapper.RequestDtoMapper;
-import com.antonp.cryptodatamongodb.model.PricePair;
 import com.antonp.cryptodatamongodb.dto.PricePairApiResponseDto;
-import org.springframework.stereotype.Component;
+import com.antonp.cryptodatamongodb.model.PricePair;
+import com.antonp.cryptodatamongodb.service.mapper.RequestDtoMapper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PricePairApiRequestMapperImpl implements RequestDtoMapper<PricePairApiResponseDto, PricePair> {
+public class PricePairApiRequestMapperImpl
+        implements RequestDtoMapper<PricePairApiResponseDto, PricePair> {
     @Override
     public PricePair mapToModel(PricePairApiResponseDto apiResponse) {
         PricePair pricePair = new PricePair();

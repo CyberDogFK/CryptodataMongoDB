@@ -3,19 +3,12 @@ package com.antonp.cryptodatamongodb.service.impl;
 import com.antonp.cryptodatamongodb.lib.HttpClientRequestException;
 import com.antonp.cryptodatamongodb.service.HttpRequestService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpException;
-import org.apache.http.client.ClientProtocolException;
+import java.io.IOException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-
-import java.io.IOException;
 
 @Service
 public class HttpRequestServiceImpl implements HttpRequestService {
