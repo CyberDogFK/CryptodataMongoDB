@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongo-db
+    restart: unless-stopped
+    env_file:
+      - ./.env
+    ports:
+      - $MONGODB_LOCAL_PORT:$MONGODB_DOCKER_PORT
+  app:
+    depends_on:
+      - mongodb
+    build: .
+    image: ma/mongo-boot-api
+    restart: on-failure
+    env_file:
+      - ./.env
+    environment:
+      - SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE=$MONGODB_DATABASE
+      - SPRING_DATA_MONGODB_HOST=$MONGODB_HOST
+      - SPRING_DATA_MONGODB_PORT=$MONGODB_DOCKER_PORT
+      - SPRING_DATA_MONGODB_DATABASE=$MONGODB_DATABASE
+      - logging.level.org.springframework.data.mongodb.core.MongoTemplate=DEBUG
+    ports:
+      - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
+    links:
+      - mongodb
