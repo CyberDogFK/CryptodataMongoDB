@@ -29,7 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Testcontainers
-@DataMongoTest(excludeAutoConfiguration = MongoDataAutoConfiguration.class)
+@DataMongoTest
 public class PricePairRepositoryTest {
     private static final Currency TEST_CURRENCY_1 = Currency.BTC;
     private static final Currency TEST_CURRENCY_2 = Currency.USD;
@@ -48,6 +48,7 @@ public class PricePairRepositoryTest {
 
     @BeforeEach
     public void setUp() {
+        System.out.println("START");
         mongoDBContainer.start();
     }
 
