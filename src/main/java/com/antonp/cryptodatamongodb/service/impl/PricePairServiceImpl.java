@@ -1,6 +1,6 @@
 package com.antonp.cryptodatamongodb.service.impl;
 
-import com.antonp.cryptodatamongodb.dto.PricePairApiResponseDto;
+import com.antonp.cryptodatamongodb.dto.PricePairApiRequestDto;
 import com.antonp.cryptodatamongodb.model.Currency;
 import com.antonp.cryptodatamongodb.model.PricePair;
 import com.antonp.cryptodatamongodb.repository.PricePairRepository;
@@ -15,15 +15,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PricePairServiceImpl implements PricePairService {
-    private static final String URL = "https://cex.io/api/last_price/";
-    private static final String URL_SEPARATOR = "/";
     private HttpRequestService httpRequestService;
     private PricePairRepository pricePairRepository;
-    private RequestDtoMapper<PricePairApiResponseDto, PricePair> apiRequestMapper;
+    private RequestDtoMapper<PricePairApiRequestDto, PricePair> apiRequestMapper;
 
     public PricePairServiceImpl(HttpRequestService httpRequestService,
                                 PricePairRepository pricePairRepository,
-                                RequestDtoMapper<PricePairApiResponseDto,
+                                RequestDtoMapper<PricePairApiRequestDto,
                                         PricePair> apiRequestMapper) {
         this.httpRequestService = httpRequestService;
         this.pricePairRepository = pricePairRepository;
@@ -35,22 +33,21 @@ public class PricePairServiceImpl implements PricePairService {
         List<PricePair> pricePairs = new ArrayList<>();
         for (Currency currency : Currency.values()) {
             if (!currency.equals(pricesIn)) {
-                pricePairs.add(apiRequestMapper.mapToModel(httpRequestService.get(
-                        createUrl(currency, pricesIn), PricePairApiResponseDto.class
-                )));
+                pricePairs.add(apiRequestMapper.mapToModel(httpRequestService.getCurrencyLastPrice(
+                        currency, pricesIn, PricePairApiRequestDto.class)));
             }
         }
         return pricePairs;
     }
 
-    @Override
-    public List<PricePair> saveAll(List<PricePair> pricePairs) {
-        return pricePairRepository.saveAll(pricePairs);
-    }
-
     @Scheduled(fixedRate = 10000)
     public List<PricePair> refreshOldestPricePairs() {
         return saveAll(getAllPricePairFromApi(Currency.USD));
+    }
+
+    @Override
+    public List<PricePair> saveAll(List<PricePair> pricePairs) {
+        return pricePairRepository.saveAll(pricePairs);
     }
 
     @Override
@@ -66,9 +63,5 @@ public class PricePairServiceImpl implements PricePairService {
     @Override
     public PricePair getMaxWithName(Currency name) {
         return pricePairRepository.findTopByCurrency1LikeOrderByPriceDesc(name);
-    }
-
-    private String createUrl(Currency currencyFor, Currency currencyIn) {
-        return String.join(URL_SEPARATOR, URL, currencyFor.name(), currencyIn.name());
     }
 }

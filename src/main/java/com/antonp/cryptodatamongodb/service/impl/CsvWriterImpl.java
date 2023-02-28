@@ -54,6 +54,7 @@ public class CsvWriterImpl implements CsvWriter {
         try (PrintWriter printWriter = new PrintWriter(outputCsv)) {
             Files.write(outputCsv.toPath(), string.getBytes());
             printWriter.write(string);
+            outputCsv.deleteOnExit();
             return new UrlResource(outputCsv.toPath().toUri());
         } catch (IOException e) {
             throw new RuntimeException(e);

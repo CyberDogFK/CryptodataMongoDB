@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import lombok.Data;
 
 @Data
-public class PricePairApiResponseDto {
+public class PricePairApiRequestDto {
     private BigDecimal lprice;
     private Currency curr1;
     private Currency curr2;
